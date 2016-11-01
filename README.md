@@ -18,10 +18,10 @@ Testing, demonstration, learning and POC. Witnessing the AWESOME power of Docker
 ## Prerequisites:
 * Git-Bash with Administrator privileges 
 * Docker-tools with minimum engine version 1.12.0
-* Docker Hub account with access to download the base nd image. (`docker login -u USERNAME -p PASSWORD`). Alternatively, you can build your own nd image [as per described here](https://github.com/WASdev/ci.docker.websphere-traditional/tree/master/network-deployment/install). Make sure you change the image name in the `FROM` block inside dmgr/Dockerfile and custom/Dockerfile to match the one you built.
+* Docker Hub account with access to download the base nd image. (`docker login -u USERNAME -p PASSWORD`). Alternatively, you can build your own nd image [as per described here](https://github.com/WASdev/ci.docker.websphere-traditional/tree/master/network-deployment/install). Make sure you change the image name in the `FROM` block inside dmgr/Dockerfile and custom/Dockerfile to match the one you built. You will also need to update the `docker-compose.yml` file with your image names.
 
 ## How do I run it?
-1. Clone this repo `git clone http://gitlab.webtech-inv.com:81/amirb/websphere-nd-docker.git`
+1. Clone this repo `https://github.com/amirbarkal/websphere-nd-docker.git`
 2. Change to the repo dir `cd websphere-nd-docker`
 3. Execute `docker-compose up -d`
 4. Wait for it... (Can take up to 20 minutes depending on the speed of your internet connection and CPU)
