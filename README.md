@@ -13,7 +13,7 @@ NOTE: At the moment the cluster needs to be manually created from ISC, after the
   cell has been initialized.
 
 ## What is it good for?
-Testing, demonstration, learning and POC.
+Testing, demonstration, learning and POC. Witnessing the AWESOME power of Docker!
 
 ## Prerequisites:
 * Git-Bash with Administrator privileges 
@@ -36,7 +36,7 @@ Open ISC and enter random username. (i.e. `wasadmin`)
 
 
 1. Go to `Servers >> Clusters >> WebSphere application server clusters >> New`
-![](images/1.png)
+![Create the cluster](images/1.png)
 2. Enter cluster name, keep default options and hit `Next`
 ![](images/2.png)
 3. Add the first cluster member to node custom1, again keeping all default options and click `Next`
@@ -79,44 +79,3 @@ Open ISC and enter random username. (i.e. `wasadmin`)
      * (CIK2GML) Install_Mgr_v1.6.2_Lnx_WASv8.5.5.zip
      * 8.5.5-WS-WAS-FP0000009-part1.zip
      * 8.5.5-WS-WAS-FP0000009-part2.zip
-
-
-## Commands:
-
-* `docker build -t amirb/portal:appserver1 --build-arg PROFILE_NAME=AppSrv01 --build-arg NODE_NAME=ServerNode --build-arg HOST_NAME=appserver1 .`
-* `docker build -t amirb/portal:appserver2 --build-arg PROFILE_NAME=AppSrv02 --build-arg NODE_NAME=ServerNode --build-arg HOST_NAME=appserver1 .`
-* `docker build -t amirb/portal:dmgr .`
-
-
-* `docker run --name dmgr -h dmgr --net=cell-network -p 9060:9060 -d amirb/portal:dmgr`
-* `docker run --name appserver1 -h appserver1 --net=cell-network -p 9080:9080 -e HOST_NAME=appserver1 -e PROFILE_NAME=AppSrv01 -e NODE_NAME=ServerNode1 -e DMGR_HOST=dmgr -e DMGR_PORT=8879 amirb/portal:appserver1`
-* `docker run --name appserver2 -h appserver2 --net=cell-network -p 9081:9080 -e HOST_NAME=appserver2 -e PROFILE_NAME=AppSrv02 -e NODE_NAME=ServerNode2 -e DMGR_HOST=dmgr -e DMGR_PORT=8879 amirb/portal:appserver2`
-
-
-* `./wsadmin.sh -lang jython -conntype SOAP -host dmgr -port 8879 -c "AdminControl.completeObjectName('cell=ServerCell,node=ServerNode,name=appserver1,type=Server,*')"`
-
-
-SOAP client properties file
-/opt/IBM/WebSphere/AppServer/profiles/Dmgr01/config/cells/DefaultCell01
-
-/opt/IBM/WebSphere/AppServer/bin/wsadmin.sh -lang jython -conntype SOAP -host dmgr -port 8879 -c "AdminTask.listNodes('[-nodeGroup DefaultNodeGroup ]')" |grep custom
-
-
-
-## Add Node
-`docker run --name custom5 -h custom5 --net=webspherenddocker_default -e PROFILE_NAME=custom -e NODE_NAME=custom5 -e DMGR_HOST=dmgr -e DMGR_PORT=8879 amirb/portal:custom`
-
-
-## Cluster
-
-`AdminTask.createCluster('[-clusterConfig [-clusterName cluster1 -preferLocal true]]')`
-
-`AdminTask.createClusterMember('[-clusterName cluster1 -memberConfig [-memberNode custom1 -memberName clusterMember1 -memberWeight 2 -genUniquePorts true -replicatorEntry false] -firstMember [-templateName default -nodeGroup DefaultNodeGroup -coreGroup DefaultCoreGroup -resourcesScope cluster]]')`
-
-`AdminTask.createClusterMember('[-clusterName cluster1 -memberConfig [-memberNode custom2 -memberName clusterMember2 -memberWeight 2 -genUniquePorts true -replicatorEntry false]]')`
-
-`AdminConfig.save()`
-
-`AdminControl.invoke('WebSphere:name=DeploymentManager,process=dmgr,platform=common,node=DefaultNode01,diagnosticProvider=true,version=8.5.5.9,type=DeploymentManager,mbeanIdentifier=DeploymentManager,cell=DefaultCell01,spec=1.0', 'multiSync', '[false]', '[java.lang.Boolean]')`
-
-`AdminControl.invoke('WebSphere:name=cluster1,process=dmgr,platform=common,node=DefaultNode01,version=8.5.5.9,type=Cluster,mbeanIdentifier=cluster1,cell=DefaultCell01,spec=1.0', 'start')`
