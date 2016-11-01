@@ -1,0 +1,40 @@
+version: '2'
+services:
+  dmgr:
+    hostname: dmgr
+    image: dmgr
+    build:
+      context: ./dmgr
+    ports:
+     - "9060:9060"
+
+  custom1:
+    hostname: custom1
+    image: custom
+    build:
+      context: ./custom
+    ports:
+     - "9080:9080"
+    environment:
+     - PROFILE_NAME=custom
+     - HOST_NAME=custom1
+     - NODE_NAME=custom1
+     - DMGR_HOST=dmgr
+     - DMGR_PORT=8879
+    depends_on:
+     - dmgr
+
+  custom2:
+    hostname: custom2
+    image: custom
+    command: /work/updateHostAndAdd2nNode.sh
+    ports:
+     - "9081:9080"
+    environment:
+     - PROFILE_NAME=custom
+     - HOST_NAME=custom2
+     - NODE_NAME=custom2
+     - DMGR_HOST=dmgr
+     - DMGR_PORT=8879
+    depends_on:
+     - custom1
